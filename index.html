@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>EC STYLE - Catálogo</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet"/>
+
+<style>
+:root{
+  --primary-bg:#0f0f0f;
+  --secondary-bg:#1a1a1a;
+  --card-bg:#1f1f1f;
+  --accent-color:#7A8F7A;
+  --text-light:#F2F2F2;
+  --text-normal:#CFCFCF;
+  --text-secondary:#9E9E9E;
+  --border-color:#333;
+  --transition:all 0.35s ease;
+}
+
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  padding:0;
+  font-family:'Montserrat',sans-serif;
+  scroll-behavior:smooth;
+  background:var(--primary-bg);
+  color:var(--text-normal);
+  overflow-x:hidden;
+  line-height:1.6;
+}
+
+/* ✅ Evita scroll de la página cuando modal está abierto */
+body.modal-open{
+  overflow:hidden;
+}
+
+/* HEADER */
+header{
+  background:var(--secondary-bg);
+  color:var(--text-light);
+  text-align:center;
+  padding:55px 20px;
+  border-bottom:1px solid var(--border-color);
+}
+
+.header-container{
+  max-width:1200px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.brand-block{
+  text-align:left;
+}
+.brand-title{
+  letter-spacing:6px;
+  text-transform:uppercase;
+  font-size:2.7em;
+  font-weight:700;
+  margin:0;
+  color:var(--text-light);
+}
+.brand-subtitle{
+  margin-top:10px;
+  font-size:1.1em;
+  font-weight:500;
+  letter-spacing:2px;
+  color:var(--text-secondary);
+}
+
+#carrito{
+  background:var(--accent-color);
+  color:#fff;
+  padding:12px 18px;
+  border-radius:25px;
+  cursor:pointer;
+  font-weight:700;
+  border:none;
+  transition:var(--transition);
+  display:inline-flex;
+  align-items:center;
+  white-space:nowrap;
+}
+#carrito:hover{
+  transform:scale(1.05);
+  background:#8FAF8F;
+  box-shadow:0 0 10px rgba(122,143,122,0.45);
+}
+
+/* SECCIÓN */
+section{
+  padding:80px 20px;
+  max-width:1200px;
+  margin:auto;
+}
+
+section h2{
+  text-align:center;
+  font-size:2em;
+  font-weight:600;
+  color:var(--text-light);
+  margin-bottom:50px;
+  border-bottom:1px solid var(--border-color);
+  padding-bottom:20px;
+}
+
+/* PRODUCTOS */
+.productos{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:60px;
+}
+
+.producto{
+  background:var(--card-bg);
+  border-radius:15px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.3);
+  text-align:center;
+  overflow:hidden;
+  transition:var(--transition);
+  border:1px solid var(--border-color);
+  animation:cardIn .55s ease both;
+}
+@keyframes cardIn{
+  from{opacity:0; transform:translateY(18px)}
+  to{opacity:1; transform:translateY(0)}
+}
+.producto:hover{
+  transform:translateY(-6px);
+  box-shadow:0 8px 25px rgba(0,0,0,0.55);
+}
+
+.producto img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+  border-radius:10px 10px 0 0;
+  transition:var(--transition);
+}
+.producto:hover img{
+  filter:brightness(1.07);
+}
+
+.producto h3{
+  margin:20px 0;
+  color:var(--text-light);
+  font-size:1.2em;
+  font-weight:600;
+}
+
+.producto p{
+  font-weight:700;
+  color:var(--accent-color);
+  font-size:1.1em;
+  margin:10px 0;
+}
+
+.producto button{
+  background:#333;
+  color:var(--text-normal);
+  border:none;
+  padding:14px 26px;
+  border-radius:25px;
+  margin-bottom:25px;
+  cursor:pointer;
+  font-size:1em;
+  font-weight:600;
+  transition:var(--transition);
+}
+.producto button:hover{
+  background:var(--accent-color);
+  color:#fff;
+  transform:scale(1.04);
+  box-shadow:0 0 10px rgba(122,143,122,0.45);
+}
+
+/* FOOTER */
+footer{
+  background:var(--secondary-bg);
+  color:var(--text-secondary);
+  text-align:center;
+  padding:40px;
+  border-top:1px solid var(--border-color);
+}
+footer p{margin:0; font-weight:500}
+
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.82);
+  align-items:center;
+  justify-content:center;
+  z-index:30;
+  padding:15px;
+  overflow-y:auto; /* ✅ scroll dentro del modal */
+}
+
+/* ✅ Animación modal */
+.modal.show{
+  display:flex;
+  animation:fadeIn .2s ease both;
+}
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+.modal-content{
+  background:#FAFAFA;
+  padding:40px;
+  border-radius:20px;
+  width:100%;
+  max-width:760px;
+  text-align:center;
+  box-shadow:0 14px 45px rgba(0,0,0,0.25);
+  max-height:90vh;
+  overflow-y:auto;
+  animation:popIn .22s ease both;
+}
+@keyframes popIn{
+  from{transform:scale(.96); opacity:.65}
+  to{transform:scale(1); opacity:1}
+}
+
+.modal-content ul{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+/* ITEM carrito */
+.modal-content li{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:18px 0;
+  color:#444;
+  border-bottom:1px solid #e0e0e0;
+  padding-bottom:12px;
+}
+
+.producto-imagen{
+  width:55px;
+  height:55px;
+  border-radius:8px;
+  object-fit:cover;
+  border:1px solid #ddd;
+  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+}
+
+.producto-info{
+  flex:1;
+  text-align:left;
+  line-height:1.4;
+}
+
+/* Cantidad */
+.qty-controls{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.qty-btn{
+  background:#333;
+  color:#fff;
+  border:none;
+  width:32px;
+  height:32px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:700;
+  transition:var(--transition);
+}
+.qty-btn:hover{
+  background:var(--accent-color);
+}
+.qty-value{
+  min-width:24px;
+  text-align:center;
+  font-weight:800;
+}
+
+/* Eliminar */
+.remove-btn{
+  background:#b33;
+  color:#fff;
+  border:none;
+  padding:8px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:800;
+  transition:var(--transition);
+}
+.remove-btn:hover{
+  background:#d44;
+}
+
+/* Total */
+#total-display{
+  font-weight:900;
+  color:var(--accent-color);
+  font-size:1.35em;
+  margin:25px 0 10px;
+}
+
+/* Checkout */
+.checkout-box{
+  margin-top:16px;
+  background:#f2f2f2;
+  padding:18px;
+  border-radius:14px;
+  text-align:left;
+  border:1px solid #e5e5e5;
+}
+
+.payment-options{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+  margin:10px 0 18px;
+}
+
+.payment-option{
+  flex:1;
+  min-width:180px;
+  border:1px solid #ddd;
+  background:#fff;
+  padding:12px 14px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:var(--transition);
+  display:flex;
+  gap:10px;
+  align-items:center;
+  font-weight:800;
+  color:#333;
+}
+.payment-option:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+.payment-option input{
+  transform:scale(1.2);
+  cursor:pointer;
+}
+
+/* Form */
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.form-group{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.form-group label{
+  font-size:0.9em;
+  color:#555;
+  font-weight:800;
+}
+.form-group input{
+  padding:12px 12px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  outline:none;
+  font-family:inherit;
+}
+.form-group input:focus{
+  border-color:var(--accent-color);
+}
+.full{
+  grid-column:1 / -1;
+}
+
+/* Botones */
+.action-row{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+
+#proceder{
+  background:var(--accent-color);
+  color:#fff;
+  border:none;
+  padding:14px 22px;
+  border-radius:25px;
+  cursor:pointer;
+  font-weight:900;
+  transition:var(--transition);
+}
+#proceder:hover{
+  background:#8FAF8F;
+  transform:scale(1.03);
+}
+
+#vaciar, #cerrar-modal{
+  background:#333;
+  color:#fff;
+  border:none;
+  padding:14px 22px;
+  border-radius:25px;
+  cursor:pointer;
+  font-weight:900;
+  transition:var(--transition);
+}
+#vaciar:hover, #cerrar-modal:hover{
+  background:#555;
+  transform:scale(1.03);
+}
+
+/* Mensaje compra */
+#success-message{
+  display:none;
+  margin-top:18px;
+  padding:14px;
+  background:#d4edda;
+  color:#155724;
+  border-radius:10px;
+  font-weight:900;
+  text-align:center;
+  animation:slideDown .22s ease both;
+}
+@keyframes slideDown{
+  from{opacity:0; transform:translateY(-8px)}
+  to{opacity:1; transform:translateY(0)}
+}
+
+/* Seguimiento link */
+#track-title{
+  display:none;
+  margin-top:16px;
+  font-weight:900;
+  color:#333;
+  text-align:center;
+  animation:slideDown .22s ease both;
+}
+#track-box{
+  display:none;
+  margin-top:12px;
+  padding:18px;
+  background:#fff;
+  border:1px solid #e5e5e5;
+  border-radius:12px;
+  text-align:center;
+  animation:slideDown .22s ease both;
+}
+#track-btn{
+  margin-top:14px;
+  background:#333;
+  color:#fff;
+  border:none;
+  padding:14px 18px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:900;
+  transition:var(--transition);
+}
+#track-btn:hover{
+  background:#555;
+  transform:scale(1.02);
+}
+
+@media (max-width:768px){
+  header{padding:45px 16px;}
+  .header-container{
+    flex-direction:column;
+    align-items:center;
+  }
+  .brand-block{text-align:center;}
+  .brand-title{font-size:2.2em; letter-spacing:4px;}
+  .productos{grid-template-columns:1fr; gap:40px;}
+  section h2{font-size:1.5em;}
+  .modal-content{padding:28px;}
+  .form-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-container">
+    <div class="brand-block">
+      <h1 class="brand-title">EC STYLE</h1>
+      <p class="brand-subtitle">Catálogo</p>
+    </div>
+
+    <button id="carrito" type="button" onclick="mostrarCarrito()">Carrito (<span id="count">0</span>)</button>
+  </div>
+</header>
+
+<section id="catalogo">
+  <h2>Prendas Urbanas</h2>
+
+  <div class="productos">
+    <div class="producto">
+      <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab" alt="Camisa blanca">
+      <h3>Camisa blanca</h3>
+      <p>$25.00</p>
+      <button class="add-to-cart"
+              data-id="1"
+              data-name="Camisa blanca"
+              data-price="25.00"
+              data-image="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab"
+              type="button">
+        Agregar al carrito
+      </button>
+    </div>
+
+    <div class="producto">
+      <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7" alt="Sudadera negra">
+      <h3>Sudadera negra</h3>
+      <p>$30.00</p>
+      <button class="add-to-cart"
+              data-id="2"
+              data-name="Sudadera negra"
+              data-price="30.00"
+              data-image="https://images.unsplash.com/photo-1556821840-3a63f95609a7"
+              type="button">
+        Agregar al carrito
+      </button>
+    </div>
+
+    <div class="producto">
+      <img src="https://images.unsplash.com/photo-1542272604-787c3835535d" alt="Pantalón jean">
+      <h3>Pantalón jean</h3>
+      <p>$35.00</p>
+      <button class="add-to-cart"
+              data-id="3"
+              data-name="Pantalón jean"
+              data-price="35.00"
+              data-image="https://images.unsplash.com/photo-1542272604-787c3835535d"
+              type="button">
+        Agregar al carrito
+      </button>
+    </div>
+
+    <div class="producto">
+      <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5" alt="Chaqueta cuero">
+      <h3>Chaqueta cuero</h3>
+      <p>$50.00</p>
+      <button class="add-to-cart"
+              data-id="4"
+              data-name="Chaqueta cuero"
+              data-price="50.00"
+              data-image="https://images.unsplash.com/photo-1551028719-00167b16eac5"
+              type="button">
+        Agregar al carrito
+      </button>
+    </div>
+
+    <div class="producto">
+      <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772" alt="Zapatos deportivos">
+      <h3>Zapatos deportivos</h3>
+      <p>$40.00</p>
+      <button class="add-to-cart"
+              data-id="5"
+              data-name="Zapatos deportivos"
+              data-price="40.00"
+              data-image="https://images.unsplash.com/photo-1549298916-b41d501d3772"
+              type="button">
+        Agregar al carrito
+      </button>
+    </div>
+
+    <div class="producto">
+      <img src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b" alt="Gorra urbana">
+      <h3>Gorra urbana</h3>
+      <p>$15.00</p>
+      <button class="add-to-cart"
+              data-id="6"
+              data-name="Gorra urbana"
+              data-price="15.00"
+              data-image="https://images.unsplash.com/photo-1588850561407-ed78c282e89b"
+              type="button">
+        Agregar al carrito
+      </button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 EC STYLE</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal" id="modal-carrito" aria-hidden="true">
+  <div class="modal-content">
+    <h2 style="color:#333; margin-top:0;">Carrito de Compras</h2>
+
+    <ul id="lista-carrito"></ul>
+    <div id="total-display">Total a pagar: $0.00</div>
+
+    <div class="checkout-box">
+      <strong style="color:#333;">Método de pago:</strong>
+
+      <div class="payment-options">
+        <label class="payment-option">
+          <input type="radio" name="metodoPago" value="efectivo" checked>
+          Efectivo
+        </label>
+
+        <label class="payment-option">
+          <input type="radio" name="metodoPago" value="tarjeta">
+          Tarjeta de crédito
+        </label>
+      </div>
+
+      <div id="tarjeta-form" style="display:none;">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>Nombre y Apellido</label>
+            <input type="text" id="nombreApellido" placeholder="Nombre y Apellido">
+          </div>
+
+          <div class="form-group full">
+            <label>Correo electrónico</label>
+            <input type="email" id="correo" placeholder="Correo electrónico">
+          </div>
+
+          <div class="form-group">
+            <label>Núm. teléfono</label>
+            <input type="tel" id="telefono" placeholder="Núm. teléfono">
+          </div>
+
+          <div class="form-group">
+            <label>Dirección</label>
+            <input type="text" id="direccion" placeholder="Dirección">
+          </div>
+
+          <div class="form-group full">
+            <label>Número de la tarjeta</label>
+            <input type="text" id="numeroTarjeta" placeholder="Número de la tarjeta">
+          </div>
+
+          <div class="form-group">
+            <label>Fecha de vencimiento</label>
+            <input type="text" id="vencimiento" placeholder="MM/AA">
+          </div>
+
+          <div class="form-group">
+            <label>Código de seguridad</label>
+            <input type="text" id="cvv" placeholder="CVV">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button id="proceder" type="button">Proceder pago</button>
+      <button id="vaciar" type="button">Vaciar carrito</button>
+      <button id="cerrar-modal" type="button" onclick="cerrarCarrito()">Cerrar</button>
+    </div>
+
+    <div id="success-message">Gracias por su compra</div>
+
+    <div id="track-title">Seguimiento de pedido</div>
+    <div id="track-box">
+      <p style="margin:0; font-weight:700; color:#444; text-align:center;">
+        Para ver el recorrido de su pedido, presione el botón:
+      </p>
+      <button id="track-btn" type="button">Ver seguimiento del pedido</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ==========================
+   VARIABLES Y STORAGE
+========================== */
+const STORAGE_KEY = "carrito_ec_style_final_listo_v1";
+const TRACKING_URL = "https://www.servientrega.com.ec/Tracking/?guia=9023349106&tipo=GUIA#thumb";
+
+let carrito = cargarCarrito();
+
+/* ==========================
+   MODAL
+========================== */
+function mostrarCarrito(){
+  const modal = document.getElementById("modal-carrito");
+  modal.classList.add("show");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+  renderCarrito();
+}
+
+function cerrarCarrito(){
+  const modal = document.getElementById("modal-carrito");
+  modal.classList.remove("show");
+  modal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
+}
+
+/* ==========================
+   STORAGE
+========================== */
+function guardarCarrito(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(carrito));
+}
+function cargarCarrito(){
+  try{
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+  }catch(e){
+    return [];
+  }
+}
+
+/* ==========================
+   CONTADOR
+========================== */
+function actualizarContador(){
+  const totalItems = carrito.reduce((acc, item) => acc + item.qty, 0);
+  document.getElementById("count").textContent = totalItems;
+}
+
+/* ==========================
+   CARRITO CRUD
+========================== */
+function agregarProducto(id, nombre, precio, imagen){
+  const existente = carrito.find(p => p.id === id);
+  if(existente){
+    existente.qty += 1;
+  }else{
+    carrito.push({ id, nombre, precio, imagen, qty: 1 });
+  }
+  guardarCarrito();
+  actualizarContador();
+}
+
+function aumentarCantidad(id){
+  const producto = carrito.find(p => p.id === id);
+  if(!producto) return;
+  producto.qty += 1;
+  guardarCarrito();
+  actualizarContador();
+  renderCarrito();
+}
+
+function disminuirCantidad(id){
+  const producto = carrito.find(p => p.id === id);
+  if(!producto) return;
+  producto.qty -= 1;
+
+  if(producto.qty <= 0){
+    carrito = carrito.filter(p => p.id !== id);
+  }
+
+  guardarCarrito();
+  actualizarContador();
+  renderCarrito();
+}
+
+function eliminarProducto(id){
+  carrito = carrito.filter(p => p.id !== id);
+  guardarCarrito();
+  actualizarContador();
+  renderCarrito();
+}
+
+function vaciarCarrito(){
+  carrito = [];
+  guardarCarrito();
+  actualizarContador();
+  renderCarrito();
+}
+
+/* ==========================
+   RENDER
+========================== */
+function renderCarrito(){
+  const lista = document.getElementById("lista-carrito");
+  lista.innerHTML = "";
+
+  // ✅ Al renderizar normal, ocultamos estados de compra
+  document.getElementById("success-message").style.display = "none";
+  document.getElementById("track-title").style.display = "none";
+  document.getElementById("track-box").style.display = "none";
+
+  let total = 0;
+
+  if(carrito.length === 0){
+    lista.innerHTML = `<p style="color:#666; margin:15px 0; font-weight:700;">Tu carrito está vacío.</p>`;
+    document.getElementById("total-display").textContent = "Total a pagar: $0.00";
+    return;
+  }
+
+  carrito.forEach((item) => {
+    total += item.precio * item.qty;
+
+    const li = document.createElement("li");
+
+    const img = document.createElement("img");
+    img.src = item.imagen;
+    img.className = "producto-imagen";
+    img.alt = item.nombre;
+
+    const info = document.createElement("div");
+    info.className = "producto-info";
+    info.innerHTML = `<strong>${item.nombre}</strong><br>$${item.precio.toFixed(2)}`;
+
+    const qty = document.createElement("div");
+    qty.className = "qty-controls";
+    qty.innerHTML = `
+      <button class="qty-btn" data-action="minus" data-id="${item.id}">-</button>
+      <span class="qty-value">${item.qty}</span>
+      <button class="qty-btn" data-action="plus" data-id="${item.id}">+</button>
+    `;
+
+    const btn = document.createElement("button");
+    btn.className = "remove-btn";
+    btn.textContent = "x";
+    btn.addEventListener("click", () => eliminarProducto(item.id));
+
+    li.appendChild(img);
+    li.appendChild(info);
+    li.appendChild(qty);
+    li.appendChild(btn);
+
+    lista.appendChild(li);
+  });
+
+  document.getElementById("total-display").textContent = "Total a pagar: $" + total.toFixed(2);
+}
+
+/* ==========================
+   MÉTODO DE PAGO UI
+========================== */
+function actualizarMetodoPagoUI(){
+  const metodo = document.querySelector('input[name="metodoPago"]:checked')?.value || "efectivo";
+  const formTarjeta = document.getElementById("tarjeta-form");
+  formTarjeta.style.display = (metodo === "tarjeta") ? "block" : "none";
+}
+
+document.querySelectorAll('input[name="metodoPago"]').forEach(radio => {
+  radio.addEventListener("change", actualizarMetodoPagoUI);
+});
+
+/* ==========================
+   EVENTOS (DELEGACIÓN)
+========================== */
+document.addEventListener("click", function(e){
+
+  // Agregar al carrito
+  const addBtn = e.target.closest(".add-to-cart");
+  if(addBtn){
+    const id = addBtn.dataset.id;
+    const nombre = addBtn.dataset.name;
+    const precio = parseFloat(addBtn.dataset.price);
+    const imagen = addBtn.dataset.image;
+
+    if(!id || !nombre || Number.isNaN(precio) || !imagen) return;
+
+    agregarProducto(id, nombre, precio, imagen);
+    return;
+  }
+
+  // Cantidades
+  const qtyBtn = e.target.closest(".qty-btn");
+  if(qtyBtn){
+    const id = qtyBtn.dataset.id;
+    const action = qtyBtn.dataset.action;
+
+    if(action === "plus") aumentarCantidad(id);
+    if(action === "minus") disminuirCantidad(id);
+    return;
+  }
+});
+
+/* Botón vaciar */
+document.getElementById("vaciar").addEventListener("click", vaciarCarrito);
+
+/* ==========================
+   PROCEDER PAGO
+========================== */
+document.getElementById("proceder").addEventListener("click", function(){
+
+  if(carrito.length === 0){
+    alert("Tu carrito está vacío.");
+    return;
+  }
+
+  const metodo = document.querySelector('input[name="metodoPago"]:checked')?.value || "efectivo";
+
+  // Validación simple solo si es tarjeta
+  if(metodo === "tarjeta"){
+    const nombreApellido = document.getElementById("nombreApellido").value.trim();
+    const correo = document.getElementById("correo").value.trim();
+    const telefono = document.getElementById("telefono").value.trim();
+    const direccion = document.getElementById("direccion").value.trim();
+    const numeroTarjeta = document.getElementById("numeroTarjeta").value.trim();
+    const vencimiento = document.getElementById("vencimiento").value.trim();
+    const cvv = document.getElementById("cvv").value.trim();
+
+    if(!nombreApellido || !correo || !telefono || !direccion || !numeroTarjeta || !vencimiento || !cvv){
+      alert("Completa todos los campos de tarjeta para continuar.");
+      return;
+    }
+  }
+
+  // ✅ Mostrar mensaje y seguimiento
+  const success = document.getElementById("success-message");
+  const trackTitle = document.getElementById("track-title");
+  const trackBox = document.getElementById("track-box");
+
+  success.style.display = "block";
+  trackTitle.style.display = "block";
+  trackBox.style.display = "block";
+
+  // ✅ Vaciar carrito SIN llamar renderCarrito() (para no ocultar el mensaje)
+  carrito = [];
+  guardarCarrito();
+  actualizarContador();
+
+  // ✅ Limpiar lista manualmente
+  document.getElementById("lista-carrito").innerHTML =
+    `<p style="color:#666; margin:15px 0; font-weight:700;">Tu carrito está vacío.</p>`;
+  document.getElementById("total-display").textContent = "Total a pagar: $0.00";
+});
+
+/* ==========================
+   BOTÓN DE SEGUIMIENTO
+========================== */
+document.getElementById("track-btn").addEventListener("click", function(){
+  window.open(TRACKING_URL, "_blank");
+});
+
+/* ==========================
+   CERRAR MODAL
+========================== */
+document.getElementById("modal-carrito").addEventListener("click", function(e){
+  if(e.target.id === "modal-carrito"){
+    cerrarCarrito();
+  }
+});
+
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape"){
+    cerrarCarrito();
+  }
+});
+
+/* INICIO */
+actualizarContador();
+actualizarMetodoPagoUI();
+</script>
+
+</body>
+</html>
